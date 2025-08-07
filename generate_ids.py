@@ -40,15 +40,16 @@ def generate_ids(photo_folder_path):
 
         try:
             # Fetch student info from DB using the ID
-            student_data = db.fetch_student(student_credentials="", db_intake=sid)
+
+            student_data = db.fetch_student("",sid)[0]
             if not student_data:
                 print(f"❌ No student data found for ID: {sid}")
                 continue
 
             # Get relevant fields from first result row
-            row = student_data[0]
-            name = row.Eng_FullName.strip()
-            major = row.CURRICULUM.strip()
+            name = student_data[1]
+            major = student_data[8]
+            
 
             photo_path = os.path.join(photo_folder_path, filename)
             if not os.path.exists(photo_path):
@@ -96,4 +97,5 @@ def generate_ids(photo_folder_path):
 
         except Exception as e:
             print(f"❌ Error processing ID {sid}: {e}")
-
+    # Close connection
+    db.close_connection()
